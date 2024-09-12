@@ -1,10 +1,7 @@
 package it.unibo.core.aggregate
 
+import it.unibo.core.aggregate.AggregateIncarnation.*
 import it.unibo.core.{DistanceEstimator, Environment, Orchestrator}
-import AggregateIncarnation.*
-import it.unibo.scafi.space.Point3D
-
-import scala.collection.mutable
 
 /**
  * An aggregate computing central orchestrator that receives the state of the world and returns the actuation for each agent.
@@ -19,15 +16,15 @@ class AggregateOrchestrator[Position, Info, Actuation](
 )(using DistanceEstimator[Position])
     extends Orchestrator[Int, Position, Info, Actuation]:
   private val sensorsNames = new StandardSensorNames {}
-  import sensorsNames._
+  import sensorsNames.*
   var exports: Map[Int, EXPORT] =
     agents.map(_ -> factory.emptyExport()).toMap
   override def tick(world: Environment[Int, Position, Info]): Map[Int, Actuation] =
     exports = (for
-      agent <- agents
-      ctx = contextFromAgent(agent, world)
+      currentAgent <- agents
+      ctx = contextFromAgent(currentAgent, world)
       agentExport = program.round(ctx)
-    yield agent -> agentExport).toMap
+    yield currentAgent -> agentExport).toMap
     exports.map((agent, ex) => agent -> ex.root[Actuation]())
 
   private def contextFromAgent(agent: Int, world: Environment[Int, Position, Info]): CONTEXT =

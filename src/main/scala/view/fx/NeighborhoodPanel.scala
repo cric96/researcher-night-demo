@@ -31,9 +31,11 @@ class NeighborhoodPanel(nodePane: Pane, neighborhoodPanel: Pane):
   def drawNeighbours(id: String, other: String): Unit =
     Platform.runLater:
       if nodePane.isAlreadyIn(id) && nodePane.isAlreadyIn(other) then
-        val circle1 = nodePane.children.find(_.id.value == id).get.asInstanceOf[javafx.scene.shape.Circle]
-        val circle2 = nodePane.children.find(_.id.value == other).get.asInstanceOf[javafx.scene.shape.Circle]
-        val line = Line(circle1.centerX.value, circle1.centerY.value, circle2.centerX.value, circle2.centerY.value)
+        val rectangleA = nodePane.children.find(_.id.value == id).get.asInstanceOf[javafx.scene.shape.Rectangle]
+        val rectangleB = nodePane.children.find(_.id.value == other).get.asInstanceOf[javafx.scene.shape.Rectangle]
+        val centerA = (rectangleA.getX + rectangleA.getWidth / 2, rectangleA.getY + rectangleA.getHeight / 2)
+        val centerB = (rectangleB.getX + rectangleB.getWidth / 2, rectangleB.getY + rectangleB.getHeight / 2)
+        val line = Line(centerA._1, centerA._2, centerB._1, centerB._2)
         line.stroke = Color(0, 0, 0, 0.05)
         neighborhoodPanel.children.add(line)
 

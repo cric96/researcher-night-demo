@@ -10,11 +10,11 @@ import scala.concurrent.Future
  * @tparam Position the type of the position of the nodes
  * @tparam Info the type of the information of the nodes
  */
-trait EnvironmentProvider[ID, Position, Info]:
+trait EnvironmentProvider[ID, Position, Info, +E <: Environment[ID, Position, Info]]:
   /**
    * This method provides an Environment.
    * It returns a Future since the computation of the Environment could be time-consuming and it could be
    * performed asynchronously.
    * @return a Future that will be completed with the Environment
    */
-  def provide(): Future[Environment[ID, Position, Info]]
+  def provide(): Future[E]

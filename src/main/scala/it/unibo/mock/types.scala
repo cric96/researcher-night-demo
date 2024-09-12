@@ -1,5 +1,5 @@
-package it.unibo.demo
+package it.unibo.mock
 
 type ID = Int
 type Position = (Double, Double)
-type Info = (Double)
+type Info = Double

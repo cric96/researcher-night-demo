@@ -7,7 +7,7 @@ import scala.concurrent.Future
  * @tparam ID The type of the node identifier
  * @tparam Actuation The type of the actuation
  */
-trait EnvironmentUpdate[ID, Actuation]:
+trait EnvironmentUpdate[ID, Position, Actuation, Info, -E <: Environment[ID, Position, Info]]:
   /**
    * Update the environment with the given actuation.
    * It returns a future that will complete when the update is done.
@@ -16,4 +16,4 @@ trait EnvironmentUpdate[ID, Actuation]:
    * @param actuation The actuation to apply
    * @return A future that will complete when the update is done
    */
-  def update(node: ID, actuation: Actuation): Future[Unit]
+  def update(world: E, id: ID, actuation: Actuation): Future[Unit]

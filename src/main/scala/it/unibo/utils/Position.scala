@@ -1,4 +1,4 @@
-package it.unibo.demo
+package it.unibo.utils
 
 import it.unibo.core.DistanceEstimator
 

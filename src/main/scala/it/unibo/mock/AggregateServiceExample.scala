@@ -1,9 +1,9 @@
-package it.unibo.demo
+package it.unibo.mock
 
 import it.unibo.core.UpdateLoop
 import it.unibo.core.aggregate.AggregateIncarnation.*
 import it.unibo.core.aggregate.AggregateOrchestrator
-import it.unibo.demo.Position.given
+import it.unibo.utils.Position.given
 import scalafx.application.JFXApp3
 import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color
@@ -39,14 +39,14 @@ object AggregateServiceExample extends JFXApp3 {
     val agents = randomAgents(40, 800)
     val world = SimpleEnvironment(agents, agentsNeighborhoodRadius)
     val provider = SimpleProvider(world)
-    val update = SimpleUpdate(world)
+    val update = SimpleUpdate()
     val aggregateOrchestrator = AggregateOrchestrator[Position, Info, (Double, Double)](agents.keySet, new Program)
 
     val basePane = Pane()
     val guiPane = Pane()
     val neighborhoodPane = Pane()
     basePane.children.addAll(neighborhoodPane, guiPane)
-    val worldPane = WorldPanel(guiPane, NodeStyle(nodeGuiSize, Color.Blue))
+    val worldPane = WorldPanel(guiPane, NodeStyle(nodeGuiSize, nodeGuiSize, Color.Blue))
     val neighbouringPane = NeighborhoodPanel(guiPane, neighborhoodPane)
     val render = SimpleRender(worldPane, neighbouringPane)
 

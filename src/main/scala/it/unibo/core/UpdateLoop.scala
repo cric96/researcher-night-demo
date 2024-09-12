@@ -7,16 +7,18 @@ import scala.concurrent.{ExecutionContext, Future}
  * 
  */
 object UpdateLoop:
-  private def step[ID, Position, Info, Actuation](
-      provider: EnvironmentProvider[ID, Position, Info],
+  private def step[ID, Position, Info, Actuation, E <: Environment[ID, Position, Info]](
+      provider: EnvironmentProvider[ID, Position, Info, E],
       coordinator: Orchestrator[ID, Position, Info, Actuation],
-      actuator: EnvironmentUpdate[ID, Actuation],
+      actuator: EnvironmentUpdate[ID, Position, Actuation, Info, E],
       render: Boundary[ID, Position, Info]
   )(using ExecutionContext) =
     for {
       env <- provider.provide()
       _ <- render.output(env).recover(e => println(s"Error rendering environment: $e"))
-      _ <- Future.sequence(coordinator.tick(env).map((id, action) => actuator.update(id, action)))
+      _ <- Future
+        .sequence(coordinator.tick(env).map((id, action) => actuator.update(env, id, action)))
+        .recover(e => println(s"Error updating environment: $e"))
     } yield ()
 
   /**
@@ -34,10 +36,10 @@ object UpdateLoop:
    * @tparam Actuation the type of the actuation of the entities
    * @return a Future[Unit] that will complete when the loop is stopped
    */
-  def loop[ID, Position, Info, Actuation](waitTime: Long = 1000L)(
-      provider: EnvironmentProvider[ID, Position, Info],
+  def loop[ID, Position, Info, Actuation, E <: Environment[ID, Position, Info]](waitTime: Long = 1000L)(
+      provider: EnvironmentProvider[ID, Position, Info, E],
       coordinator: Orchestrator[ID, Position, Info, Actuation],
-      actuator: EnvironmentUpdate[ID, Actuation],
+      actuator: EnvironmentUpdate[ID, Position, Actuation, Info, E],
       render: Boundary[ID, Position, Info]
   )(using ExecutionContext): Future[Unit] =
     step(provider, coordinator, actuator, render)
