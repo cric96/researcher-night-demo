@@ -4,7 +4,7 @@ import org.opencv.calib3d.Calib3d;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
+import java.nio.file.Path;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,16 +132,21 @@ public class CameraCalibrator {
      * @param directoryPath
      * @return the list of the absolute path of each image
      */
-    private static List<String> getImageFiles(final String directoryPath) {
-        final File dir = new File(directoryPath);
-        final File[] files = dir.listFiles((dir1, name) -> name.toLowerCase(Locale.getDefault()).endsWith(".jpg") 
-            || name.toLowerCase(Locale.getDefault()).endsWith(".png"));
-        final List<String> imageFiles = new ArrayList<>();
-        if (files != null) {
-            for (final File file : files) {
-                imageFiles.add(file.getAbsolutePath());
+    private static List<String> getImageFiles(final String directoryPath){
+        try {
+            var path = Path.of(ClassLoader.getSystemClassLoader().getResource(directoryPath).toURI());
+            final File dir = path.toFile();
+            final File[] files = dir.listFiles((dir1, name) -> name.toLowerCase(Locale.getDefault()).endsWith(".jpg")
+                    || name.toLowerCase(Locale.getDefault()).endsWith(".png"));
+            final List<String> imageFiles = new ArrayList<>();
+            if (files != null) {
+                for (final File file : files) {
+                    imageFiles.add(file.getAbsolutePath());
+                }
             }
+            return imageFiles;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return imageFiles;
     }
 }

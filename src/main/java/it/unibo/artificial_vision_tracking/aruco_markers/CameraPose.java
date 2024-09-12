@@ -36,7 +36,7 @@ public class CameraPose {
     private static final double PERSPECTIVE_REMOVE_IGNORED_MARGIN_PER_CELL = 0.1;
 
     //Costants for the camera
-    private static final int CAMERA_EXPORSURE = -5;
+    private static final int CAMERA_EXPORSURE = -2;
 
     //Costants for the calcPose methods
     private static final int CORNER_NUMBER = 4;
@@ -176,7 +176,7 @@ public class CameraPose {
      */
     public VideoCapture getCamera() {
         //Getting the camera
-        final VideoCapture capture = new VideoCapture(this.selectedcamera); // Use 0 for the primary camera
+        final VideoCapture capture = new VideoCapture(this.selectedcamera, Videoio.CAP_V4L2); // Use 0 for the primary camera
         if (!capture.isOpened()) {
             LOGGER.warning("Error: impossible to open webcam.");
             converterToMat.close();
@@ -196,7 +196,7 @@ public class CameraPose {
         }
 
         //Setting the camera exposure to reduce the motion blur
-        capture.set(Videoio.CAP_PROP_EXPOSURE, CAMERA_EXPORSURE);
+        capture.set(Videoio.CAP_PROP_EXPOSURE, 100);
 
         //Getting the frame rate
         LOGGER.info("Frame rate: " + capture.get(Videoio.CAP_PROP_FPS));
@@ -512,7 +512,8 @@ public class CameraPose {
         long startWhile;
         while (running) {
             startWhile = System.currentTimeMillis();
-
+            System.out.println(capture.set(Videoio.CAP_PROP_EXPOSURE, CAMERA_EXPORSURE));
+            System.out.println(capture.get(Videoio.CAP_PROP_EXPOSURE));
             //Getting the frame
             startGetFrameTime = System.currentTimeMillis();
             capture.read(frame);

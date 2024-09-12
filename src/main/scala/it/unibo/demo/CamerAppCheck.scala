@@ -25,7 +25,7 @@ object App {
     val markerLength = 0.07f // Lunghezza del marker (in metri)
     val selectedCamera = 0
     val dictionaryType = Objdetect.DICT_4X4_100
-    val cameraParam = new util.ArrayList[Mat]
+    /*val cameraParam = new util.ArrayList[Mat]
     var cameraMatrix = new Mat
     var distCoeffs = new Mat
     cameraMatrix = new Mat(3, 3, org.opencv.core.CvType.CV_64F)
@@ -37,7 +37,9 @@ object App {
       -0.0006330161088470909, 0.1140937797457088)
     distCoeffs.put(0, 0, data: _*)
     cameraParam.add(cameraMatrix)
-    cameraParam.add(distCoeffs)
+    cameraParam.add(distCoeffs)*/
+    val cc: CameraCalibrator = new CameraCalibrator(markersX, markersY, "calibration")
+    val cameraParam: List[Mat] = cc.calibration()
     val cp = new CameraPose(cameraParam.get(0), cameraParam.get(1), markerLength, dictionaryType, selectedCamera)
     cp.calcPose();
     val camera = cp.getCamera
