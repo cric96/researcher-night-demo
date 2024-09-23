@@ -5,6 +5,9 @@ import it.unibo.core.aggregate.AggregateIncarnation.ID
 import it.unibo.mock.AggregateServiceExample.stage
 import it.unibo.core.aggregate.AggregateIncarnation.*
 import it.unibo.core.aggregate.AggregateOrchestrator
+import it.unibo.demo.camera.CameraProvider
+import it.unibo.demo.robot.{RobotUpdate, WaveRobot}
+import it.unibo.demo.scenarios.Program
 import it.unibo.mock.{MagnifierPolicy, SimpleRender}
 import scalafx.application.JFXApp3
 import scalafx.scene.layout.Pane
@@ -17,27 +20,9 @@ import org.bytedeco.opencv.opencv_java
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 
-class Program extends AggregateProgram with StandardSensors with BlockG:
-  def distanceVector: (Double, Double) = nbrvar[(Double, Double)](NBR_VECTOR)
-  private val neighborsMinDistance = 10.0
-
-  def module(position: (Double, Double)): Double = Math.sqrt(position._1 * position._1 + position._2 * position._2)
-  def normalize(position: (Double, Double)): (Double, Double) = {
-    val module = this.module(position)
-    (position._1 / module, position._2 / module)
-  }
-  def rotate90(position: (Double, Double)): (Double, Double) = (-position._2, position._1)
-  /**
-   * A simple program in which the nodes go towards the center of a the node with the id 1.
-   * @return the vector that the node has to follow to reach the center of the node with id 1.
-   */
-  override def main(): (Double, Double) =
-    val versor = gradientCast[(Double, Double)](mid() == 0, (0.0, 0.0), (x, y) => (-distanceVector._1, -distanceVector._2))
-    mux(mid() == 0)((0.0, 0.0))(rotate90(normalize(versor)))
-    
-
 object AggregateServiceExample extends JFXApp3 {
   try Loader.load(classOf[opencv_java])
+  catch case e: Exception => e.printStackTrace()
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 5
   override def start(): Unit =

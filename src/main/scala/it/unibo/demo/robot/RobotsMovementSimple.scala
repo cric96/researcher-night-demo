@@ -1,5 +1,7 @@
 package it.unibo.demo
 
+import it.unibo.demo.robot.WaveRobot
+
 object RobotsMovementSimple extends App:
   private def robotIps(id: Int): String = s"192.168.8.$id"
   val robots = List(

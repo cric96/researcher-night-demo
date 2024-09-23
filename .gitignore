@@ -127,5 +127,7 @@ hs_err_pid*
 # Ignore code-workspaces
 *.code-workspace
 
+.bsp/*
+
 **/target
 # End of https://www.toptal.com/developers/gitignore/api/scala,metals,intellij+all,visualstudiocode

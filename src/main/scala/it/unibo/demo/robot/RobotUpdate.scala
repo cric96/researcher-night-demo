@@ -1,6 +1,7 @@
 package it.unibo.demo
 
 import it.unibo.core.{Environment, EnvironmentUpdate}
+import it.unibo.demo.robot.Robot
 
 import scala.concurrent.{ExecutionContext, Future}
 class RobotUpdate(robots: List[Robot])(using ExecutionContext)

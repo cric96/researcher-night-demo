@@ -1,7 +1,8 @@
-package it.unibo.demo
+package it.unibo.demo.camera
 
 import it.unibo.artificial_vision_tracking.aruco_markers.CameraPose
 import it.unibo.core.{Environment, EnvironmentProvider}
+import it.unibo.demo.DemoEnvironment
 import org.opencv.core.Mat
 import org.opencv.objdetect.Objdetect
 
