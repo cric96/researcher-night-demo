@@ -24,7 +24,7 @@ object DemoProgramEntrypoint extends JFXApp3 {
   catch case e: Exception => e.printStackTrace()
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 5
-  private val aggregateProgram: AggregateProgram = AllRobotsAlignedProgram()
+  private val aggregateProgram: AggregateProgram = FollowTheLeaderRotating()
   private val provider = CameraProvider(
     List(
       0, 1, 2, 3, 4
