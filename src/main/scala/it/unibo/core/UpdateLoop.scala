@@ -14,11 +14,15 @@ object UpdateLoop:
       render: Boundary[ID, Position, Info]
   )(using ExecutionContext) =
     for {
+      int <- Future.successful(System.currentTimeMillis().toInt)
       env <- provider.provide()
       _ <- render.output(env).recover(e => println(s"Error rendering environment: $e"))
-      _ <- Future
+      _ <- 
+        Future
         .sequence(coordinator.tick(env).map((id, action) => actuator.update(env, id, action)))
         .recover(e => println(s"Error updating environment: $e"))
+      endTime <- Future.successful(System.currentTimeMillis().toInt)
+      _ <- Future.successful(println(s"Time: ${endTime - int}"))
     } yield ()
 
   /**

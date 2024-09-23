@@ -4,6 +4,7 @@ import org.bytedeco.javacv.CanvasFrame;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.*;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.ArucoDetector;
 import org.opencv.objdetect.DetectorParameters;
@@ -512,8 +513,6 @@ public class CameraPose {
         long startWhile;
         while (running) {
             startWhile = System.currentTimeMillis();
-            System.out.println(capture.set(Videoio.CAP_PROP_EXPOSURE, CAMERA_EXPORSURE));
-            System.out.println(capture.get(Videoio.CAP_PROP_EXPOSURE));
             //Getting the frame
             startGetFrameTime = System.currentTimeMillis();
             capture.read(frame);
@@ -614,7 +613,7 @@ public class CameraPose {
             final Mat resizedFrame12 = new Mat();
             Imgproc.resize(frame, resizedFrame12, new Size((double) frame.width() / SCALE_CANVAS,
                 (double) frame.height() / SCALE_CANVAS));
-
+            final Mat increasedContrat = new Mat();
             //Display the frame
             canvas.showImage(converterToMat.convert(resizedFrame12));
 

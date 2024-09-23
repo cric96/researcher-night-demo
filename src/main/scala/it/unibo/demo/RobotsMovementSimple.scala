@@ -10,5 +10,5 @@ object RobotsMovementSimple extends App:
     //14
   ).map(i => WaveRobot(robotIps(i), i))
   while true do
-    robots.foreach(_.spin())
+    robots.foreach(_.spinRight())
   end while

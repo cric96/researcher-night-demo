@@ -21,12 +21,20 @@ class Program extends AggregateProgram with StandardSensors with BlockG:
   def distanceVector: (Double, Double) = nbrvar[(Double, Double)](NBR_VECTOR)
   private val neighborsMinDistance = 10.0
 
+  def module(position: (Double, Double)): Double = Math.sqrt(position._1 * position._1 + position._2 * position._2)
+  def normalize(position: (Double, Double)): (Double, Double) = {
+    val module = this.module(position)
+    (position._1 / module, position._2 / module)
+  }
+  def rotate90(position: (Double, Double)): (Double, Double) = (-position._2, position._1)
   /**
    * A simple program in which the nodes go towards the center of a the node with the id 1.
    * @return the vector that the node has to follow to reach the center of the node with id 1.
    */
   override def main(): (Double, Double) =
-    (1, 0)
+    val versor = gradientCast[(Double, Double)](mid() == 0, (0.0, 0.0), (x, y) => (-distanceVector._1, -distanceVector._2))
+    mux(mid() == 0)((0.0, 0.0))(rotate90(normalize(versor)))
+    
 
 object AggregateServiceExample extends JFXApp3 {
   try Loader.load(classOf[opencv_java])
@@ -36,23 +44,21 @@ object AggregateServiceExample extends JFXApp3 {
 
     val provider = CameraProvider(
       List(
-        //0,
-        // 1,
-        2,
-        3,
-        // 4
-    ), 1)
+        0, 1, 2, 3, 4
+      ),
+      1
+    )
     val robots = List(
-      //WaveRobot("192.168.8.10", 0),
-      //WaveRobot("192.168.8.11", 1),
+      WaveRobot("192.168.8.10", 0),
+      WaveRobot("192.168.8.11", 1),
       WaveRobot("192.168.8.12", 2),
       WaveRobot("192.168.8.13", 3),
-      //WaveRobot("192.168.8.14", 4)
+      WaveRobot("192.168.8.14", 4)
     )
     val update = RobotUpdate(robots)
     val aggregateOrchestrator =
       AggregateOrchestrator[Position, Info, (Double, Double)](robots.map(_.id).toSet, new Program)
-    val magnifier = MagnifierPolicy.translateAndScale((300, 200), 800)
+    val magnifier = MagnifierPolicy.translateAndScale((200, 300), 400)
     val basePane = Pane()
     val guiPane = Pane()
     val neighborhoodPane = Pane()
@@ -61,7 +67,7 @@ object AggregateServiceExample extends JFXApp3 {
     val neighbouringPane = NeighborhoodPanel(guiPane, neighborhoodPane)
     val render = SimpleRender(worldPane, neighbouringPane, magnifier)
 
-    UpdateLoop.loop(33)(
+    UpdateLoop.loop(0)(
       provider,
       aggregateOrchestrator,
       update,

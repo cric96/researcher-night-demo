@@ -46,9 +46,8 @@ class WorldPanel(pane: Pane, style: NodeStyle):
     line.endY = deltaY
 
   private def calculateDelta(centerX: Double, centerY: Double, direction: Double): (Double, Double) =
-    val orientation = direction * 180 / Math.PI
-    val deltaX = centerX + (Math.cos(orientation) * 10)
-    val deltaY = centerY + (Math.sin(orientation) * 10)
+    val deltaX = centerX + (Math.cos(direction - (Math.PI / 2)) * 10)
+    val deltaY = centerY + (Math.sin(direction - (Math.PI / 2)) * 10)
     (deltaX, deltaY)
 
   private def findNodeById[T](id: String): T =

@@ -8,10 +8,10 @@ if not camera.isOpened():
     exit()
 
 
-delay = 5
+delay = 1
 frames = 0
 
-while frames < 20:
+while frames < 30:
     ret, frame = camera.read()
 
     if not ret:
@@ -19,11 +19,10 @@ while frames < 20:
         break
 
     file_name = f"frame-{frames}.jpg"
-
     cv2.imwrite(file_name, frame)
-
     frames = frames + 1
     time.sleep(delay)
+    print("Current-frame:", frames)
 
 camera.release()
 cv2.destroyAllWindows()
