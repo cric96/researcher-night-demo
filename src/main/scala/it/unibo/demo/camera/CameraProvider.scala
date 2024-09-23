@@ -2,13 +2,15 @@ package it.unibo.demo.camera
 
 import it.unibo.artificial_vision_tracking.aruco_markers.CameraPose
 import it.unibo.core.{Environment, EnvironmentProvider}
-import it.unibo.demo.DemoEnvironment
+import it.unibo.demo.environment.DemoEnvironment
+import it.unibo.demo.{ID, Info, Position}
 import org.opencv.core.Mat
 import org.opencv.objdetect.Objdetect
 
-import java.util.concurrent.{ConcurrentLinkedQueue, LinkedBlockingQueue}
+import java.util.concurrent.LinkedBlockingQueue
 import scala.concurrent.{ExecutionContext, Future}
 import scala.jdk.CollectionConverters.ListHasAsScala
+
 class CameraProvider(val ids: List[ID], radius: Double)(using ExecutionContext)
     extends EnvironmentProvider[ID, Position, Info, Environment[ID, Position, Info]]:
   private var worldCache = ids.map(id => id -> ((0.0, 0.0) -> 0.0)).toMap
@@ -16,7 +18,7 @@ class CameraProvider(val ids: List[ID], radius: Double)(using ExecutionContext)
   private val markersX = 11
   private val markersY = 8
   private val markerLength = 0.07f
-  private val selectedCamera = 0
+  private val selectedCamera = 4
   private val dictionaryType = Objdetect.DICT_4X4_100
   private val cameraParam = new java.util.ArrayList[Mat]
   private var cameraMatrix = Mat()

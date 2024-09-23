@@ -1,9 +1,11 @@
-package it.unibo.demo
+package it.unibo.demo.robot
 
 import it.unibo.core.{Environment, EnvironmentUpdate}
+import it.unibo.demo.{ID, Info, Position}
 import it.unibo.demo.robot.Robot
 
 import scala.concurrent.{ExecutionContext, Future}
+
 class RobotUpdate(robots: List[Robot])(using ExecutionContext)
     extends EnvironmentUpdate[ID, Position, (Double, Double), Info, Environment[ID, Position, Info]]:
   val threshold = 0.15

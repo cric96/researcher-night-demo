@@ -1,13 +1,12 @@
 package it.unibo.demo
 
 import it.unibo.core.UpdateLoop
-import it.unibo.core.aggregate.AggregateIncarnation.ID
+import it.unibo.core.aggregate.AggregateIncarnation.{AggregateProgram, ID}
 import it.unibo.mock.AggregateServiceExample.stage
-import it.unibo.core.aggregate.AggregateIncarnation.*
 import it.unibo.core.aggregate.AggregateOrchestrator
 import it.unibo.demo.camera.CameraProvider
-import it.unibo.demo.robot.{RobotUpdate, WaveRobot}
-import it.unibo.demo.scenarios.Program
+import it.unibo.demo.robot.{RobotUpdate, RotationRobotUpdate, WaveRobot}
+import it.unibo.demo.scenarios.*
 import it.unibo.mock.{MagnifierPolicy, SimpleRender}
 import scalafx.application.JFXApp3
 import scalafx.scene.layout.Pane
@@ -20,29 +19,30 @@ import org.bytedeco.opencv.opencv_java
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Random
 
-object AggregateServiceExample extends JFXApp3 {
+object DemoProgramEntrypoint extends JFXApp3 {
   try Loader.load(classOf[opencv_java])
   catch case e: Exception => e.printStackTrace()
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 5
-  override def start(): Unit =
+  private val aggregateProgram: AggregateProgram = AllRobotsAlignedProgram()
+  private val provider = CameraProvider(
+    List(
+      0, 1, 2, 3, 4
+    ),
+    1
+  )
+  private val robots = List(
+    WaveRobot("192.168.8.10", 0),
+    WaveRobot("192.168.8.11", 1),
+    WaveRobot("192.168.8.12", 2),
+    WaveRobot("192.168.8.13", 3),
+    WaveRobot("192.168.8.14", 4),
+  )
+  private val update = RotationRobotUpdate(robots, 0.15)
 
-    val provider = CameraProvider(
-      List(
-        0, 1, 2, 3, 4
-      ),
-      1
-    )
-    val robots = List(
-      WaveRobot("192.168.8.10", 0),
-      WaveRobot("192.168.8.11", 1),
-      WaveRobot("192.168.8.12", 2),
-      WaveRobot("192.168.8.13", 3),
-      WaveRobot("192.168.8.14", 4)
-    )
-    val update = RobotUpdate(robots)
+  override def start(): Unit =
     val aggregateOrchestrator =
-      AggregateOrchestrator[Position, Info, (Double, Double)](robots.map(_.id).toSet, new Program)
+      AggregateOrchestrator[Position, Info, (Double, Double)](robots.map(_.id).toSet, aggregateProgram)
     val magnifier = MagnifierPolicy.translateAndScale((200, 300), 400)
     val basePane = Pane()
     val guiPane = Pane()

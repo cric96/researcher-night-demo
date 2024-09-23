@@ -1,4 +1,4 @@
-package it.unibo.demo
+package it.unibo.demo.robot
 
 import it.unibo.demo.robot.WaveRobot
 

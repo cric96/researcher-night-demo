@@ -1,9 +1,9 @@
-package it.unibo.demo
+package it.unibo.demo.environment
 
-import it.unibo.core.Environment
-import it.unibo.utils.Position.Position
 import it.unibo.core.DistanceEstimator.distance
-import it.unibo.utils.Position.{*, given}
+import it.unibo.core.Environment
+import it.unibo.demo.{ID, Info}
+import it.unibo.utils.Position.{Position, *, given}
 
 class DemoEnvironment(data: Map[ID, (Position, Info)], neighboursRadius: Double)
     extends Environment[ID, Position, Info]:
