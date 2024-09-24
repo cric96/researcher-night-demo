@@ -24,10 +24,10 @@ object DemoProgramEntrypoint extends JFXApp3 {
   catch case e: Exception => e.printStackTrace()
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 5
-  private val aggregateProgram: AggregateProgram = CircleFormation(0.001, 6, 0.1)
+  private val aggregateProgram: AggregateProgram = CircleFormation(0.001, 6, 0.2)
   private val provider = CameraProvider(
     List(6, 1, 2, 3, 5),
-    1,
+    10,
   )
   private val robots = List(
     WaveRobot("192.168.8.10", 6),
