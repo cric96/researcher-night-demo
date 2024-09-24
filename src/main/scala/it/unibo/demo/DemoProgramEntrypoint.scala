@@ -5,7 +5,7 @@ import it.unibo.core.aggregate.AggregateIncarnation.{AggregateProgram, ID}
 import it.unibo.mock.AggregateServiceExample.stage
 import it.unibo.core.aggregate.AggregateOrchestrator
 import it.unibo.demo.camera.CameraProvider
-import it.unibo.demo.robot.{RobotUpdate, RotationRobotUpdate, WaveRobot}
+import it.unibo.demo.robot.{RotationRobotUpdate, WaveRobot}
 import it.unibo.demo.scenarios.*
 import it.unibo.mock.{MagnifierPolicy, SimpleRender}
 import scalafx.application.JFXApp3
@@ -26,17 +26,15 @@ object DemoProgramEntrypoint extends JFXApp3 {
   private val nodeGuiSize = 5
   private val aggregateProgram: AggregateProgram = FollowTheLeaderRotating()
   private val provider = CameraProvider(
-    List(
-      0, 1, 2, 3, 4
-    ),
-    1
+    List(6, 1, 2, 3, 5),
+    1,
   )
   private val robots = List(
-    WaveRobot("192.168.8.10", 0),
+    WaveRobot("192.168.8.10", 6),
     WaveRobot("192.168.8.11", 1),
     WaveRobot("192.168.8.12", 2),
     WaveRobot("192.168.8.13", 3),
-    WaveRobot("192.168.8.14", 4),
+    WaveRobot("192.168.8.14", 5)
   )
   private val update = RotationRobotUpdate(robots, 0.15)
 

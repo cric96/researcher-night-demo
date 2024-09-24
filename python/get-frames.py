@@ -1,14 +1,15 @@
 import cv2
 import time
 
-camera = cv2.VideoCapture(0)
+camera = cv2.VideoCapture(4)
+camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
 if not camera.isOpened():
     print("Errore: impossibile aprire la camera")
     exit()
 
-
-delay = 1
+delay = 1.5
 frames = 0
 
 while frames < 30:

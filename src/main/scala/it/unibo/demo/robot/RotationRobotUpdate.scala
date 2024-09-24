@@ -15,7 +15,9 @@ class RotationRobotUpdate(private val robots: List[Robot], private val threshold
         (actuation._1 - directionVector._1) * (actuation._1 - directionVector._1) +
           (actuation._2 - directionVector._2) * (actuation._2 - directionVector._2)
       )
+      println(s"Node $id direction: $direction")
       val angle = Math.atan2(actuation._2, actuation._1) - Math.atan2(directionVector._2, directionVector._1)
+      println(s"Node $id angle: ${Math.atan2(actuation._2, actuation._1)}")
       robots.find(_.id == id) match
         case None => throw IllegalStateException(s"No robot with $id found!")
         case Some(robot) => handleMovement(robot, actuation, euclideanDistance, angle)

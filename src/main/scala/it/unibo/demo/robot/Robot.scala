@@ -11,10 +11,10 @@ trait Robot:
   def nop(): Unit
 
 class WaveRobot(ip: String, val id: Int) extends Robot:
-  def spinRight(): Unit = requests.get(url = s"http://$ip/js?json=${Command(0.25, -0.25).toJson}")
-  def spinLeft(): Unit = requests.get(url = s"http://$ip/js?json=${Command(-0.25, 0.25).toJson}")
-  def forward(): Unit = requests.get(url = s"http://$ip/js?json=${Command(0.25, 0.25).toJson}")
-  def backward(): Unit = requests.get(url = s"http://$ip/js?json=${Command(-0.25, -0.25).toJson}")
+  def spinRight(): Unit = requests.get(url = s"http://$ip/js?json=${Command(0.20, -0.20).toJson}")
+  def spinLeft(): Unit = requests.get(url = s"http://$ip/js?json=${Command(-0.20, 0.20).toJson}")
+  def forward(): Unit = requests.get(url = s"http://$ip/js?json=${Command(0.20, 0.20).toJson}")
+  def backward(): Unit = requests.get(url = s"http://$ip/js?json=${Command(-0.20, -0.20).toJson}")
   override def nop(): Unit = requests.get(url = s"http://$ip/js?json=${Command(-0, -0).toJson}")
   private class Command(left: Double, right: Double):
     def toJson: String = URLEncoder.encode(s"""{"T":1, "L":$left, "R":$right}""")

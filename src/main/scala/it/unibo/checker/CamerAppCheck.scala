@@ -21,7 +21,7 @@ object App {
   def main(args: Array[String]): Unit = {
     val markersX = 11 // Numero di marker sull'asse X
     val markersY = 8 // Numero di marker sull'asse Y
-    val markerLength = 0.120f // Lunghezza del marker (in metri)
+    val markerLength = 0.09f // Lunghezza del marker (in metri)
     val selectedCamera = 4
     val dictionaryType = Objdetect.DICT_4X4_100
     val cameraParam = new util.ArrayList[Mat]

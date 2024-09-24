@@ -187,9 +187,9 @@ public class CameraPose {
         //Setting the proper camera resolution
         boolean resolutionSet = false;
         for (final ResolutionEnum resolution : ResolutionEnum.values()) {
-            if (capture.set(Videoio.CAP_PROP_FRAME_WIDTH, resolution.getWidth()) 
+            if (capture.set(Videoio.CAP_PROP_FRAME_WIDTH, resolution.getWidth())
                 && capture.set(Videoio.CAP_PROP_FRAME_HEIGHT, resolution.getHeight())) {
-                    LOGGER.info("Camera resolution set to: " + capture.get(Videoio.CAP_PROP_FRAME_WIDTH) 
+                    LOGGER.info("Camera resolution set to: " + capture.get(Videoio.CAP_PROP_FRAME_WIDTH)
                     + "x" + capture.get(Videoio.CAP_PROP_FRAME_HEIGHT));
                 resolutionSet = true;
                 break;
