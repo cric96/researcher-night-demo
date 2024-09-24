@@ -3,7 +3,7 @@ package it.unibo.mock
 import it.unibo.core.UpdateLoop
 import it.unibo.core.aggregate.AggregateIncarnation.*
 import it.unibo.core.aggregate.AggregateOrchestrator
-import it.unibo.demo.scenarios.{CircleFormation, LineFormation}
+import it.unibo.demo.scenarios.{CircleFormation, LineFormation, TowardLeader}
 import it.unibo.utils.Position.given
 import scalafx.application.JFXApp3
 import scalafx.scene.layout.Pane
@@ -33,8 +33,11 @@ class Program extends AggregateProgram with StandardSensors with BlockG with Blo
     else towardCenters*/
     val leader = mid() == 1
     val potential = gradientCast(leader, 0.0, _ + nbrRange)
-    val directionTowardsLeader = gradientCast(leader, (0.0, 0.0), (x, y) => (x + distanceVector._1, y + distanceVector._2))
-    val collectInfo = collectCast[Set[(ID, (Double, Double))]](potential, _ ++ _, Set((mid(), directionTowardsLeader)), Set.empty).filter(_._1 != mid())
+    val directionTowardsLeader =
+      gradientCast(leader, (0.0, 0.0), (x, y) => (x + distanceVector._1, y + distanceVector._2))
+    val collectInfo =
+      collectCast[Set[(ID, (Double, Double))]](potential, _ ++ _, Set((mid(), directionTowardsLeader)), Set.empty)
+        .filter(_._1 != mid())
     val ordered = orderedNodes(collectInfo)
     val distance = 40
     val division = (math.Pi * 2) / ordered.size
@@ -61,7 +64,8 @@ object AggregateServiceExample extends JFXApp3 {
     val world = SimpleEnvironment(agents, agentsNeighborhoodRadius)
     val provider = SimpleProvider(world)
     val update = SimpleUpdate()
-    val aggregateOrchestrator = AggregateOrchestrator[Position, Info, (Double, Double)](agents.keySet, new CircleFormation(10, 1, 5))
+    val aggregateOrchestrator =
+      AggregateOrchestrator[Position, Info, (Double, Double)](agents.keySet, new TowardLeader(10))
 
     val basePane = Pane()
     val guiPane = Pane()

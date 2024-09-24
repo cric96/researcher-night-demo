@@ -11,3 +11,6 @@ trait BaseDemo extends AggregateProgram, StandardSensors, BlockG, BlockC:
   def normalize(position: (Double, Double)): (Double, Double) =
     val module = this.module(position)
     (position._1 / module, position._2 / module)
+
+  def rotate90(position: (Double, Double)): (Double, Double) =
+    (-position._2, position._1)

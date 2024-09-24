@@ -6,9 +6,8 @@ import it.unibo.demo.robot.Robot
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RobotUpdate(robots: List[Robot])(using ExecutionContext)
+class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext)
     extends EnvironmentUpdate[ID, Position, (Double, Double), Info, Environment[ID, Position, Info]]:
-  val threshold = 0.15
   override def update(world: Environment[ID, Position, Info], id: ID, actuation: (Double, Double)): Future[Unit] =
     Future:
       val direction = world.sensing(id)

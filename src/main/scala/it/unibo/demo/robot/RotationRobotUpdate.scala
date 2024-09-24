@@ -16,6 +16,7 @@ class RotationRobotUpdate(private val robots: List[Robot], private val threshold
           (actuation._2 - directionVector._2) * (actuation._2 - directionVector._2)
       )
       println(s"Node $id direction: $direction")
+      println(s"Node $id actuation: $actuation")
       val angle = Math.atan2(actuation._2, actuation._1) - Math.atan2(directionVector._2, directionVector._1)
       println(s"Node $id angle: ${Math.atan2(actuation._2, actuation._1)}")
       robots.find(_.id == id) match
@@ -24,6 +25,7 @@ class RotationRobotUpdate(private val robots: List[Robot], private val threshold
 
   private def handleMovement(robot: Robot, actuation: (Double, Double), distance: Double, angle: Double): Unit =
     actuation match
-      case (0.0, 0.0) | _ if distance < threshold => robot.nop()
+      case (0.0, 0.0) => robot.nop()
+      case _ if distance < threshold => robot.nop()
       case _ if angle > 0 => robot.spinRight()
       case _ => robot.spinLeft()
