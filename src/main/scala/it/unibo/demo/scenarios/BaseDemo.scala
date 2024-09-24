@@ -1,8 +1,8 @@
 package it.unibo.demo.scenarios
 
-import it.unibo.core.aggregate.AggregateIncarnation.{AggregateProgram, BlockG, StandardSensors}
+import it.unibo.core.aggregate.AggregateIncarnation.{AggregateProgram, BlockG, BlockC, StandardSensors}
 
-trait BaseDemo extends AggregateProgram, StandardSensors, BlockG:
+trait BaseDemo extends AggregateProgram, StandardSensors, BlockG, BlockC:
   def distanceVector: (Double, Double) = nbrvar(NBR_VECTOR)
 
   def module(position: (Double, Double)): Double =
@@ -10,4 +10,4 @@ trait BaseDemo extends AggregateProgram, StandardSensors, BlockG:
 
   def normalize(position: (Double, Double)): (Double, Double) =
     val module = this.module(position)
-    (position._1 / module, position._2 / module) 
+    (position._1 / module, position._2 / module)
