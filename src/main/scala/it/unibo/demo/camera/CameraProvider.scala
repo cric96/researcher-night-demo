@@ -11,14 +11,13 @@ import java.util.concurrent.LinkedBlockingQueue
 import scala.concurrent.{ExecutionContext, Future}
 import scala.jdk.CollectionConverters.ListHasAsScala
 
-class CameraProvider(val ids: List[ID], radius: Double)(using ExecutionContext)
+class CameraProvider(val ids: List[ID], radius: Double, selectedCamera: Int = 0)(using ExecutionContext)
     extends EnvironmentProvider[ID, Position, Info, Environment[ID, Position, Info]]:
   private var worldCache = ids.map(id => id -> ((0.0, 0.0) -> 0.0)).toMap
   private val concurrentQueue = new LinkedBlockingQueue[Map[ID, (Position, Info)]]()
 //  private val markersX = 6
 //  private val markersY = 6
   private val markerLength = 0.08f
-  private val selectedCamera = 4
   private val dictionaryType = Objdetect.DICT_4X4_1000
   private val cameraParam = new java.util.ArrayList[Mat]
   private var cameraMatrix = Mat()

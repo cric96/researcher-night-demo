@@ -13,7 +13,7 @@ abstract class ShapeFormation(leaderSelected: Int, stabilityThreshold: Double) e
     val local = gradientCast(leader, suggestion, a => a).getOrElse(mid, (0.0, 0.0))
     val distanceTowardGoal = Math.sqrt(local._1 * local._1 + local._2 * local._2)
     if distanceTowardGoal < stabilityThreshold then (0, 0)
-    else (local._1 / distanceTowardGoal, local._2 / distanceTowardGoal)
+    else rotate90(local._1 / distanceTowardGoal, local._2 / distanceTowardGoal)
 
   protected def orderedNodes(nodes: Set[(Int, (Double, Double))]): List[(Int, (Double, Double))] =
     nodes.filter(_._1 != mid()).toList.sortBy(_._1)

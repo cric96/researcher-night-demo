@@ -5,7 +5,7 @@ import it.unibo.core.aggregate.AggregateIncarnation.{AggregateProgram, ID}
 import it.unibo.mock.AggregateServiceExample.stage
 import it.unibo.core.aggregate.AggregateOrchestrator
 import it.unibo.demo.camera.CameraProvider
-import it.unibo.demo.robot.{RobotUpdate, RotationRobotUpdate, WaveRobot}
+import it.unibo.demo.robot.{RobotUpdate, RobotUpdateWithoutRotate, RotationRobotUpdate, WaveRobot}
 import it.unibo.demo.scenarios.*
 import it.unibo.mock.{MagnifierPolicy, SimpleRender}
 import scalafx.application.JFXApp3
@@ -24,10 +24,10 @@ object DemoProgramEntrypoint extends JFXApp3 {
   catch case e: Exception => e.printStackTrace()
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 5
-  private val aggregateProgram: AggregateProgram = CircleFormation(0.001, 6, 0.2)
+  private val aggregateProgram: AggregateProgram = LineFormation(0.4, 6, 0.05) // CircleFormation(0.5, 6, 0.05)
   private val provider = CameraProvider(
     List(6, 1, 2, 3, 5),
-    10,
+    10
   )
   private val robots = List(
     WaveRobot("192.168.8.10", 6),
