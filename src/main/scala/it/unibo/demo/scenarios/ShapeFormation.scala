@@ -1,22 +1,27 @@
 package it.unibo.demo.scenarios
 
+import it.unibo.demo.robot.Actuation
+import it.unibo.demo.robot.Actuation.{Forward, NoOp}
+
 abstract class ShapeFormation(leaderSelected: Int, stabilityThreshold: Double) extends BaseDemo:
   def calculateSuggestion(ordered: List[(Int, (Double, Double))]): Map[Int, (Double, Double)]
 
-  override def main(): (Double, Double) =
+  override def main(): Actuation =
     val leader = mid() == leaderSelected
     val potential = gradientCast(leader, 0.0, _ + nbrRange)
     val directionTowardsLeader =
       gradientCast(leader, (0.0, 0.0), (x, y) => (x + distanceVector._1, y + distanceVector._2))
     val collectInfo =
-      collectCast[Map[Int,(Double, Double)]](potential, _ ++ _, Map((mid() -> directionTowardsLeader)), Map.empty)
+      collectCast[Map[Int,(Double, Double)]](potential, _ ++ _, Map(mid() -> directionTowardsLeader), Map.empty)
         .filter(_._1 != mid())
     val ordered = orderedNodes(collectInfo.toSet)
     val suggestion = branch(leaderSelected == mid())(calculateSuggestion(ordered))(Map.empty)
     val local = gradientCast(leader, suggestion, a => a).getOrElse(mid, (0.0, 0.0))
     val distanceTowardGoal = Math.sqrt(local._1 * local._1 + local._2 * local._2)
-    if distanceTowardGoal < stabilityThreshold then (0, 0)
-    else rotate90(local._1 / distanceTowardGoal, local._2 / distanceTowardGoal)
+    val res = if distanceTowardGoal < stabilityThreshold then NoOp
+    else Forward(rotate90(local._1 / distanceTowardGoal, local._2 / distanceTowardGoal))
+    println(s"Device ${mid()}: $res")
+    res
 
   protected def orderedNodes(nodes: Set[(Int, (Double, Double))]): List[(Int, (Double, Double))] =
     nodes.filter(_._1 != mid()).toList.sortBy(_._1)
@@ -24,7 +29,6 @@ abstract class ShapeFormation(leaderSelected: Int, stabilityThreshold: Double) e
 class LineFormation(distanceThreshold: Double, leaderSelected: Int, stabilityThreshold: Double)
     extends ShapeFormation(leaderSelected, stabilityThreshold):
   override def calculateSuggestion(ordered: List[(Int, (Double, Double))]): Map[Int, (Double, Double)] =
-    //val (left, right) = ordered.splitAt(ordered.size / 2)
     val (leftSlots, rightSlots) = ordered.indices.splitAt(ordered.size / 2)
     var devicesAvailable = ordered
     val leftCandidates = leftSlots.map: index =>
@@ -37,7 +41,6 @@ class LineFormation(distanceThreshold: Double, leaderSelected: Int, stabilityThr
       devicesAvailable = devicesAvailable.filterNot(_._1 == candidate._1)
       candidate._1 -> candidate._3
     .toMap
-    println(leftCandidates)
     val rightCandidates = rightSlots.map(i => i - rightSlots.min).map: index =>
       val candidate = devicesAvailable.map:
         case (id, (xPos, yPos)) =>
@@ -48,13 +51,6 @@ class LineFormation(distanceThreshold: Double, leaderSelected: Int, stabilityThr
       devicesAvailable = devicesAvailable.filterNot(_._1 == candidate._1)
       candidate._1 -> candidate._3
     .toMap
-    println(rightCandidates)
-//    val leftSuggestion = left.zipWithIndex.map { case ((id, (x, y)), i) =>
-//      id -> ((-(i + 1) * distanceThreshold) + x, y)
-//    }.toMap
-//    val rightSuggestion = right.zipWithIndex.map { case ((id, (x, y)), i) =>
-//      id -> (((i + 1) * distanceThreshold) + x, y)
-//    }.toMap
     leftCandidates ++ rightCandidates
 
 class CircleFormation(radius: Double, leaderSelected: Int, stabilityThreshold: Double)
