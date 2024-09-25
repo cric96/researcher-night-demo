@@ -19,10 +19,11 @@ class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext
     val robot = robots.find(_.id == id).get
     actuation match
       case NoOp => Future.successful(robot.nop())
-      case Rotation(rotationVector) =>
+      case Rotation(actuation) =>
         Future:
           val direction = world.sensing(id)
           val directionVector = (Math.cos(direction), Math.sin(direction))
+          val rotationVector = (actuation._2, actuation._1)
           val deltaAngle =
             math.atan2(rotationVector._2, rotationVector._1) - Math.atan2(directionVector._2, directionVector._1)
           val angleEuclideanDistance = Math.sqrt(
@@ -33,11 +34,11 @@ class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext
             case _ if angleEuclideanDistance < threshold => robot.nop()
             case _ if deltaAngle > 0 => robot.spinRight()
             case _ => robot.spinLeft()
-      case Forward(vector) =>
+      case Forward(actuation) =>
         Future:
           val direction = world.sensing(id)
           val directionVector = (Math.cos(direction), Math.sin(direction))
-
+          val vector = (actuation._2, actuation._1)
           val deltaAngle = Math.atan2(vector._2, vector._1) - Math.atan2(directionVector._2, directionVector._1)
           val angleEuclideanDistance = Math.sqrt(
             (vector._1 - directionVector._1) * (vector._1 - directionVector._1) +

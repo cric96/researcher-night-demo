@@ -49,7 +49,7 @@ class CameraProvider(val ids: List[ID], radius: Double, selectedCamera: Int = 0)
     val data = cameraPose
       .capturePositioning(camera)
       .asScala
-      .map(p => (p.getId, (p.getX, p.getY) -> p.getRotation))
+      .map(p => (p.getId, (p.getX, -p.getY) -> p.getRotation))
       .toMap
     // use old value if not present
     val updatedWorld = worldCache.map { case (id, (pos, rot)) => id -> data.getOrElse(id, (pos, rot)) }
