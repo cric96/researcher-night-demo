@@ -21,7 +21,7 @@ class AggregateOrchestrator[Position, Info, Actuation](
     agents.map(_ -> factory.emptyExport()).toMap
   override def tick(world: Environment[Int, Position, Info]): Map[Int, Actuation] =
     exports = (for
-      currentAgent <- agents
+      currentAgent <- agents.intersect(world.nodes)
       ctx = contextFromAgent(currentAgent, world)
       agentExport = program.round(ctx)
     yield currentAgent -> agentExport).toMap
@@ -36,7 +36,9 @@ class AggregateOrchestrator[Position, Info, Actuation](
       "info" -> myInfo,
       LSNS_POSITION -> myPosition
     )
-    val neighboursExports = neighbours.map(n => n -> exports(n)).toMap + (agent -> exports(agent))
+    val neighboursExports = neighbours
+      .map(n => n -> exports.getOrElse(n, factory.emptyExport()))
+      .toMap + (agent -> exports.getOrElse(agent, factory.emptyExport()))
     val neighboursDistances =
       neighboursPosition.map((n, p) => n -> summon[DistanceEstimator[Position]].distance(myPosition, p))
     val neighboursDistancesVector =

@@ -22,7 +22,7 @@ object App {
     val markersX = 11 // Numero di marker sull'asse X
     val markersY = 8 // Numero di marker sull'asse Y
     val markerLength = 0.09f // Lunghezza del marker (in metri)
-    val selectedCamera = 4 // change this to the camera you want to use
+    val selectedCamera = 0 // change this to the camera you want to use
     val dictionaryType = Objdetect.DICT_4X4_100
     val cameraParam = new util.ArrayList[Mat]
     var cameraMatrix = new Mat

@@ -16,4 +16,4 @@ class TowardLeader(leader: Int) extends BaseDemo:
         (x, y) => (x + distanceVector._1, y + distanceVector._2)
       )
     print(distance)
-    mux(leader == mid())(NoOp)(Rotation((normalize(distance))))
+    mux(leader == mid())(Rotation(1, 0))(Forward((normalize(distance))))

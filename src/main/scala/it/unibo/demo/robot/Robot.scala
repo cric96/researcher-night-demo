@@ -14,10 +14,10 @@ trait Robot:
 class WaveRobot(ip: String, val id: Int) extends Robot:
   private var lastCommandWasNoOp = false
   def spinRight(): Unit =
-    requests.get(url = s"http://$ip/js?json=${Command(0.22, -0.22).toJson}")
+    requests.get(url = s"http://$ip/js?json=${Command(0.20, -0.20).toJson}")
     lastCommandWasNoOp = false
   def spinLeft(): Unit =
-    requests.get(url = s"http://$ip/js?json=${Command(-0.22, 0.22).toJson}")
+    requests.get(url = s"http://$ip/js?json=${Command(-0.20, 0.20).toJson}")
     lastCommandWasNoOp = false
   def forward(): Unit =
     requests.get(url = s"http://$ip/js?json=${Command(-0.16, -0.16).toJson}")
