@@ -12,13 +12,13 @@ class FollowTheLeaderRotating(private val leaderId: Int, private val timeInterva
   )
 
   override def main(): Actuation =
+    executeOnEach(10_000L, (NoOp, 0)): (_, prevIndex) =>
+      (directions(prevIndex % directions.size), prevIndex + 1)
+    ._1
+
+  private def executeOnEach[T](deltaTime: Long, default: T)(logic: T => T): T =
     val currentTime = System.currentTimeMillis()
-    val result = rep((currentTime, 0, NoOp)): (prevTime, prevIndex, _) =>
-      val deltaTime = currentTime - prevTime
-      val newTime = if deltaTime > timeInterval then currentTime else prevTime
-      val newIndex = if deltaTime > timeInterval then prevIndex + 1 else prevIndex
-      val newLeaderDirection = directions(newIndex % directions.length)
-      val result = gradientCast[Actuation](mid() == 6, newLeaderDirection, identity)
-      if (mid() == leaderId) println(newLeaderDirection)
-      (newTime, newIndex, result)
-    result._3
+    val result = rep((currentTime, default)): (prevTime, prevValue) =>
+      if currentTime - prevTime > deltaTime then (currentTime, logic(prevValue))
+      else (prevTime, prevValue)
+    result._2

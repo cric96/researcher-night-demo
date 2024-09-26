@@ -25,15 +25,14 @@ object DemoProgramEntrypoint extends JFXApp3 {
   private val agentsNeighborhoodRadius = 200
   private val nodeGuiSize = 4
   private val aggregateProgram: AggregateProgram = CircleFormation(0.5, 5, 0.05)
-  /* FollowTheLeaderRotating(6) AllRobotsAlignedProgram() LineFormation(
-      0.4,
-      6,
-      0.05
-    )CircleFormation(0.5, 6, 0.05)*/
+  // FollowTheLeaderRotating(6)
+  // AllRobotsAlignedProgram()
+  // LineFormation(0.4, 5, 0.05)
+  // CircleFormation(0.5, 5, 0.05)
   private val provider = CameraProvider(
     List(6, 1, 2, 3, 5),
     10,
-    0
+    4,
   )
   private val robots = List(
     WaveRobot("192.168.8.10", 6),
