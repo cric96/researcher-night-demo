@@ -25,8 +25,12 @@ class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext
           val direction = world.sensing(id)
           val directionVector = (Math.cos(direction), Math.sin(direction))
           val rotationVector = (actuation._2, actuation._1)
-          val deltaAngle =
+          var deltaAngle =
             math.atan2(rotationVector._2, rotationVector._1) - Math.atan2(directionVector._2, directionVector._1)
+          if (deltaAngle > math.Pi)
+            deltaAngle = deltaAngle - 2 * math.Pi
+          else if (deltaAngle < -math.Pi)
+            deltaAngle = deltaAngle + 2 * math.Pi
           val angleEuclideanDistance = Math.sqrt(
             (rotationVector._1 - directionVector._1) * (rotationVector._1 - directionVector._1) +
               (rotationVector._2 - directionVector._2) * (rotationVector._2 - directionVector._2)
@@ -42,10 +46,11 @@ class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext
           val adjustedVector = (actuation._2, actuation._1)
           val vectorDirection = Math.atan2(actuation._2, actuation._1)
           val vector = if (vectorDirection < 0) (-adjustedVector._1, -adjustedVector._2) else adjustedVector
-          println("Vector: " + vector)
-          println("Actuation: " + adjustedVector)
-          println("Vector direction: " + vectorDirection)
-          val deltaAngle = Math.atan2(vector._2, vector._1) - Math.atan2(directionVector._2, directionVector._1)
+          var deltaAngle = Math.atan2(vector._2, vector._1) - Math.atan2(directionVector._2, directionVector._1)
+          if (deltaAngle > math.Pi)
+            deltaAngle = deltaAngle - 2 * math.Pi
+          else if (deltaAngle < -math.Pi)
+            deltaAngle = deltaAngle + 2 * math.Pi
           val angleEuclideanDistance = Math.sqrt(
             (vector._1 - directionVector._1) * (vector._1 - directionVector._1) +
               (vector._2 - directionVector._2) * (vector._2 - directionVector._2)
@@ -55,6 +60,9 @@ class RobotUpdate(robots: List[Robot], threshold: Double)(using ExecutionContext
               if (vectorDirection < 0) robot.backward() else robot.forward()
             case _ if deltaAngle > 0 => robot.spinRight()
             case _ => robot.spinLeft()
+      // convert from -pi, pi to 0 to 2pi
+  def adjustAngle(angle: Double): Double =
+    if angle < 0 then angle + 2 * Math.PI else angle
 
 //    Future:
 //      val direction = world.sensing(id)
