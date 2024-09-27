@@ -177,7 +177,7 @@ public class CameraPose {
      */
     public VideoCapture getCamera() {
         //Getting the camera
-        final VideoCapture capture = new VideoCapture(this.selectedcamera, Videoio.CAP_V4L2); // Use 0 for the primary camera
+        final VideoCapture capture = new VideoCapture(this.selectedcamera); // Use 0 for the primary camera
         if (!capture.isOpened()) {
             LOGGER.warning("Error: impossible to open webcam.");
             converterToMat.close();
@@ -197,7 +197,10 @@ public class CameraPose {
         }
 
         //Setting the camera exposure to reduce the motion blur
-        capture.set(Videoio.CAP_PROP_EXPOSURE, 100);
+        final boolean autoExposure = capture.set(Videoio.CAP_PROP_AUTO_EXPOSURE, 1); // 3 is auto-mode | 1 is manual mode
+        final boolean exposureSet = capture.set(Videoio.CAP_PROP_EXPOSURE, 120);
+        LOGGER.info("Camera exposure set to custom value: " + exposureSet);
+        LOGGER.info("Camera exposure set to: " + capture.get(Videoio.CAP_PROP_EXPOSURE));
 
         //Getting the frame rate
         LOGGER.info("Frame rate: " + capture.get(Videoio.CAP_PROP_FPS));
