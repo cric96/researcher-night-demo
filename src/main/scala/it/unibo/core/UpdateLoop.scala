@@ -14,15 +14,21 @@ object UpdateLoop:
       render: Boundary[ID, Position, Info]
   )(using ExecutionContext) =
     for {
-      int <- Future.successful(System.currentTimeMillis().toInt)
+      int <- Future(System.currentTimeMillis().toInt)
       env <- provider.provide()
       _ <- render.output(env).recover(e => println(s"Error rendering environment: $e"))
-      _ <- 
+      _ <-
         Future
-        .sequence(coordinator.tick(env).map((id, action) => actuator.update(env, id, action)))
-        .recover(e => println(s"Error updating environment: $e"))
-      endTime <- Future.successful(System.currentTimeMillis().toInt)
-      _ <- Future.successful(println(s"Time: ${endTime - int}"))
+          .sequence(
+            coordinator
+              .tick(env)
+              .map((id, action) =>
+                actuator.update(env, id, action).recover(e => println(s"Error updating entity $id: $e"))
+              )
+          )
+          .recover(e => println(s"Error updating environment: $e"))
+      endTime <- Future(System.currentTimeMillis().toInt)
+      _ <- Future(println(s"Time: ${endTime - int}"))
     } yield ()
 
   /**
@@ -47,5 +53,6 @@ object UpdateLoop:
       render: Boundary[ID, Position, Info]
   )(using ExecutionContext): Future[Unit] =
     step(provider, coordinator, actuator, render)
+      .recover(e => println(s"Error in loop: $e"))
       .flatMap(_ => Future(Thread.sleep(waitTime)))
       .flatMap(_ => loop(waitTime)(provider, coordinator, actuator, render))
