@@ -263,13 +263,8 @@ public class CameraPose {
         }
 
         //Create the object points of the marker
-        final MatOfPoint3f objPoints = new MatOfPoint3f(
-                new Point3(0, 0, 0),
-                new Point3(markerLength, 0, 0),
-                new Point3(markerLength, markerLength, 0),
-                new Point3(0, markerLength, 0)
-        );
-
+        final MatOfPoint3f objPoints = getMatOfPoint3fwithMarkerLength(0, 0, 0);
+        
         final Mat frame = new Mat();
 
         //Getting the frame
@@ -346,7 +341,6 @@ public class CameraPose {
         gray.release();
         reducedFrame.release();
         frame.release();
-        frame.release();
 
         if (markerCount > 0) {
             final double avgReprojectionError = Math.sqrt(totalReprojectionError / markerCount);
@@ -360,15 +354,19 @@ public class CameraPose {
         return new Mat[]{tvecs, rvecs};
     }
 
+    private MatOfPoint3f getMatOfPoint3fwithMarkerLength(final int x, final int y, final int z) {
+        return new MatOfPoint3f(
+                new Point3(x, y, z),
+                new Point3(markerLength, y, z),
+                new Point3(markerLength, markerLength, z),
+                new Point3(x, markerLength, z)
+        );
+    }
+
     public List<PhysicalElement> capturePositioning(final VideoCapture capture) {
 
         //Create the object points of the marker
-        final MatOfPoint3f objPoints = new MatOfPoint3f(
-                new Point3(0, 0, 0),
-                new Point3(markerLength, 0, 0),
-                new Point3(markerLength, markerLength, 0),
-                new Point3(0, markerLength, 0)
-        );
+        final MatOfPoint3f objPoints = getMatOfPoint3fwithMarkerLength(0, 0, 0);
 
         final Mat frame = new Mat();
 
@@ -480,13 +478,7 @@ public class CameraPose {
         final long frameDuration = (long) (Costants.SECOND_IN_MILLIS / capture.get(Videoio.CAP_PROP_FPS));
 
         //Create the object points of the marker
-        final MatOfPoint3f objPoints = new MatOfPoint3f(
-                new Point3(0, 0, 0),
-                new Point3(markerLength, 0, 0),
-                new Point3(markerLength, markerLength, 0),
-                new Point3(0, markerLength, 0)
-        );
-
+        final MatOfPoint3f objPoints = getMatOfPoint3fwithMarkerLength(0, 0, 0);
         //Canvas to display the webcam feed
         final CanvasFrame canvas = getCanvas("Webcam");
 
@@ -725,4 +717,5 @@ public class CameraPose {
         projectedPoints.release();
         return error;
     }
+
 }
